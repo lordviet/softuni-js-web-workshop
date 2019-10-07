@@ -1,21 +1,9 @@
 const Cube = require("../models/Cube");
-// const fs = require("fs");
-// const cubes = require("../config/database");
 
 module.exports = {
     getIndex: function (req, res) {
-        // Performing a search query
-        // let { search, from, to } = req.query;
-        // if (search || from || to) {
-        //     return res.render("index", { cubes: searchCubes(cubes.slice(), search, from, to) });
-        // }
-        // fs.readFile("./config/database.json", "utf8", (err, data) => {
-        //     if (err) throw err;
-
-        //     return res.render("index", { cubes: JSON.parse(data) });
-        // });
-        // return res.render("index");
-        Cube.find({})
+        const {search, from, to} = req.query;
+        Cube.find(searchCubes(search, from, to))
             .then(cubes => {
                 return res.render("index", { cubes });
             });
@@ -39,23 +27,27 @@ module.exports = {
             return res.render("details", { cube });
         });
     },
-    
+
     getError: function (req, res) {
         return res.render("404");
     },
 }
 
-function searchCubes(cubes, searchName, fromDifficulty, toDifficulty) {
-    if (searchName) {
-        searchName = searchName.toLowerCase();
-        cubes = cubes.filter(cube => cube.name.toLowerCase().includes(searchName));
+function searchCubes(search, from, to) {
+    let query = {};
+    if (search) {
+        query = { ...query, name: { $regex: search, $options : "i" } };
     }
-    if (fromDifficulty) {
-        cubes = cubes.filter(cube => cube.difficultyLevel >= +fromDifficulty);
+    if (to) {
+        query = { ...query, 
+            difficultyLevel: { ...query.difficultyLevel, $lte: +to } };
     }
-    if (toDifficulty) {
-        cubes = cubes.filter(cube => cube.difficultyLevel <= +toDifficulty);
+    if (from) {
+        query = {
+            ...query,
+            difficultyLevel: { ...query.difficultyLevel, $gte: +from }
+        };
     }
 
-    return cubes;
+    return query;
 }
