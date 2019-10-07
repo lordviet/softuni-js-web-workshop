@@ -49,9 +49,16 @@ module.exports = {
         let cube = cubes.filter(cube => cube.id === id)[0];
         return res.render("details", { cube });
     },
+    getAccessory: function (req, res) {
+        return res.render("createAccessory");
+    },
+    getAttachAccessory: function (req, res) {
+        let id = Number(req.params.id);
+        return res.render("attachAccessory");
+    },
     getError: function (req, res) {
         return res.render("404");
-    }
+    },
 }
 
 function searchCubes(cubes, searchName, fromDifficulty, toDifficulty) {

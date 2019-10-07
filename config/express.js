@@ -6,9 +6,9 @@ module.exports = (app) => {
 
     app.engine('.hbs', handlebars({
         defaultLayout: 'main',
-        extname: '.hbs'
+        extname: '.hbs',
     }));
-
+    
     app.use(bodyParser.urlencoded({
         extended: true
     }));
