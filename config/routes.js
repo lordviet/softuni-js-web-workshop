@@ -8,7 +8,8 @@ module.exports = (app) => {
     app.get("/details/:id", cubeController.getDetails);
     app.get("/create/accessory", accessoryController.getCreateAccessory);
     app.post("/create/accessory", accessoryController.postCreateAccessory);
-    app.get("/attach/accessory/:id", accessoryController.getAttachAccessory)
+    app.get("/attach/accessory/:id", accessoryController.getAttachAccessory);
+    app.post("/attach/accessory/:id", accessoryController.postAttachAccessory);
     app.get("/", cubeController.getIndex);
     app.get("*", cubeController.getError);
 };

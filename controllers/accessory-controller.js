@@ -11,10 +11,28 @@ module.exports = {
                 return res.redirect("/");
             });
     },
-    getAttachAccessory: function (req, res) {
-        let id = req.params.id;
-        Cube.findById(id).then((cube) => {
-            return res.render("attachAccessory", { cube });
-        });
+    getAttachAccessory: function (req, res, next) {
+        const { id: cubeId } = req.params;
+        Cube.findById(cubeId).then(
+            cube => Promise.all([cube, Accessory.find({ cubes: { $nin: cubeId } })])
+        ).then(([cube, filterAccessories]) => {
+            res.render('attachAccessory.hbs', {
+                cube,
+                accessories: filterAccessories.length > 0 ? filterAccessories : null
+            });
+        }).catch(next);
+    },
+
+    postAttachAccessory: function (req, res, next) {
+        const { id } = req.params;
+        const { accessory: accessoryId } = req.body;
+        Promise.all([
+            Cube.update({ _id: id }, { $push: { accessories: accessoryId } }),
+            Accessory.update({ _id: accessoryId }, { $push: { cubes: id } })
+        ])
+            .then(() => {
+                res.redirect('/');
+            })
+            .catch(next);
     }
 };

@@ -34,7 +34,8 @@ module.exports = {
     },
     getDetails: function (req, res) {
         let id = req.params.id;
-        Cube.findById(id).then((cube) => {
+        // populate to get the info of accessories
+        Cube.findById(id).populate("accessories").then((cube) => {
             return res.render("details", { cube });
         });
     },
