@@ -5,31 +5,41 @@ const cubes = require("../config/database");
 module.exports = {
     getIndex: function (req, res) {
         // Performing a search query
-        let { search, from, to } = req.query;
-        if (search || from || to) {
-            return res.render("index", { cubes: searchCubes(cubes.slice(), search, from, to) });
-        }
-        fs.readFile("./config/database.json", "utf8", (err, data) => {
-            if (err) throw err;
+        // let { search, from, to } = req.query;
+        // if (search || from || to) {
+        //     return res.render("index", { cubes: searchCubes(cubes.slice(), search, from, to) });
+        // }
+        // fs.readFile("./config/database.json", "utf8", (err, data) => {
+        //     if (err) throw err;
 
-            return res.render("index", { cubes: JSON.parse(data) });
-        });
+        //     return res.render("index", { cubes: JSON.parse(data) });
+        // });
+        // return res.render("index");
+        Cube.find({})
+            .then(cubes => {
+                console.log(cubes);
+                return res.render("index", { cubes });
+            });
     },
     getCreate: function (req, res) {
         return res.render("create");
     },
     postCreate: function (req, res) {
         // console.log(req.body);
-        fs.readFile("./config/database.json", "utf8", (err, data) => {
-            if (err) throw err;
-            let database = JSON.parse(data);
-            let id = database.length + 1;
-            let cube = new Cube(id, ...Object.values(req.body));
-            database.push(cube);
-            let json = JSON.stringify(database);
-            fs.writeFile("./config/database.json", json, "utf-8", () => console.log("The Cube was successfully added!"))
-        });
-        return res.redirect("/");
+        // fs.readFile("./config/database.json", "utf8", (err, data) => {
+        //     if (err) throw err;
+        //     let database = JSON.parse(data);
+        //     let id = database.length + 1;
+        //     let cube = new Cube(id, ...Object.values(req.body));
+        //     database.push(cube);
+        //     let json = JSON.stringify(database);
+        //     fs.writeFile("./config/database.json", json, "utf-8", () => console.log("The Cube was successfully added!"))
+        // });
+        Cube.create(req.body)
+            .then(() => {
+                return res.redirect('/');
+            });
+        // return res.redirect("/");
     },
     getAbout: function (req, res) {
         return res.render("about");
