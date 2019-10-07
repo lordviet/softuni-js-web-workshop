@@ -1,6 +1,6 @@
 const Cube = require("../models/Cube");
-const fs = require("fs");
-const cubes = require("../config/database");
+// const fs = require("fs");
+// const cubes = require("../config/database");
 
 module.exports = {
     getIndex: function (req, res) {
