@@ -8,7 +8,7 @@ module.exports = (app) => {
     app.get("/login", userController.getLogin);
     // add post login 
     app.get("/register", userController.getRegister);
-    // add post register
+    app.post("/register", userController.postRegister);
     app.get("/about", cubeController.getAbout);
     app.get("/details/:id", cubeController.getDetails);
     app.get("/create/accessory", accessoryController.getCreateAccessory);

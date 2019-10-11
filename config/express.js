@@ -1,6 +1,8 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 
 module.exports = (app) => {
 
@@ -8,6 +10,8 @@ module.exports = (app) => {
         defaultLayout: 'main',
         extname: '.hbs',
     }));
+    
+    app.use(cookieParser());
     
     app.use(bodyParser.urlencoded({
         extended: true
