@@ -2,7 +2,7 @@ const Cube = require("../models/Cube");
 
 module.exports = {
     getIndex: function (req, res) {
-        const {search, from, to} = req.query;
+        const { search, from, to } = req.query;
         Cube.find(searchCubes(search, from, to))
             .then(cubes => {
                 return res.render("index", { cubes });
@@ -12,6 +12,7 @@ module.exports = {
         return res.render("create");
     },
     postCreate: function (req, res) {
+        // TODO fix this, add null values just in case
         Cube.create(req.body)
             .then(() => {
                 return res.redirect('/');
@@ -27,7 +28,12 @@ module.exports = {
             return res.render("details", { cube });
         });
     },
-
+    getDeleteCube: function (req, res) {
+        return res.render("deleteCubePage"); // add id
+    },
+    getEdit: function (req, res) {
+        return res.render("editCubePage"); // add id
+    },
     getError: function (req, res) {
         return res.render("404");
     },
@@ -36,11 +42,13 @@ module.exports = {
 function searchCubes(search, from, to) {
     let query = {};
     if (search) {
-        query = { ...query, name: { $regex: search, $options : "i" } };
+        query = { ...query, name: { $regex: search, $options: "i" } };
     }
     if (to) {
-        query = { ...query, 
-            difficultyLevel: { ...query.difficultyLevel, $lte: +to } };
+        query = {
+            ...query,
+            difficultyLevel: { ...query.difficultyLevel, $lte: +to }
+        };
     }
     if (from) {
         query = {
