@@ -17,5 +17,8 @@
     },
     "devDependencies": {
         "nodemon": "^1.19.2"
+    },
+    "scripts": {
+        "serve": "nodemon index.js"
     }
 }
