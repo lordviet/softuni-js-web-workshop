@@ -3,29 +3,33 @@ const Cube = require("../models/Cube");
 module.exports = {
     getIndex: function (req, res) {
         const { search, from, to } = req.query;
+        const user = req.user;
         Cube.find(searchCubes(search, from, to))
             .then(cubes => {
-                return res.render("index", { cubes });
+                return res.render("index", { cubes, user });
             });
     },
     getCreate: function (req, res) {
-        return res.render("create");
+        const user = req.user;
+        return res.render("create", { user });
     },
     postCreate: function (req, res) {
-        // TODO fix this, add null values just in case
-        Cube.create(req.body)
+        const { name = null, description = null, imageUrl = null, difficultyLevel = null } = req.body;
+        const { user } = req;
+        Cube.create({ name, description, imageUrl, difficultyLevel, creatorId: user._id })
             .then(() => {
                 return res.redirect('/');
             });
     },
     getAbout: function (req, res) {
-        return res.render("about");
+        return res.render("about", { user: req.user });
     },
     getDetails: function (req, res) {
         let id = req.params.id;
+        const { user } = req;
         // populate to get the info of accessories
         Cube.findById(id).populate("accessories").then((cube) => {
-            return res.render("details", { cube });
+            return res.render("details", { cube, user });
         });
     },
     getDeleteCube: function (req, res) {

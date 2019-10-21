@@ -2,7 +2,7 @@ const { Accessory, Cube } = require('../models');
 
 module.exports = {
     getCreateAccessory: function (req, res) {
-        return res.render("createAccessory");
+        return res.render("createAccessory", { user: req.user });
     },
 
     postCreateAccessory: function (req, res) {
