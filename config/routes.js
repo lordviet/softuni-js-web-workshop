@@ -19,7 +19,7 @@ module.exports = (app) => {
     app.post("/attach/accessory/:id", accessoryController.postAttachAccessory);
     app.get("/delete", cubeController.getDeleteCube); // add :id
     // add post
-    app.get("/edit", cubeController.getEdit); // add :id
+    app.get("/edit/:id", auth(), cubeController.getEdit); // add :id
     app.get("/", auth(false), cubeController.getIndex);
     app.get("*", cubeController.getError);
 };

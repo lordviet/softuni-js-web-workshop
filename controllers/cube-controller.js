@@ -27,16 +27,23 @@ module.exports = {
     getDetails: function (req, res) {
         let id = req.params.id;
         const { user } = req;
-        // populate to get the info of accessories
+        let isCreator = false;
+        
         Cube.findById(id).populate("accessories").then((cube) => {
-            return res.render("details", { cube, user });
+            isCreator = cube.creatorId === user.id;
+            return res.render("details", { cube, user, isCreator });
         });
     },
     getDeleteCube: function (req, res) {
         return res.render("deleteCubePage"); // add id
     },
     getEdit: function (req, res) {
-        return res.render("editCubePage"); // add id
+        let id = req.params.id;
+        const { user } = req;
+        Cube.findOne({ _id: id, creatorId: user._id }).then(cube => {
+            return res.render("editCubePage", { cube, user }); // add id
+
+        });
     },
     getError: function (req, res) {
         return res.render("404");
