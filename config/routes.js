@@ -5,13 +5,13 @@ module.exports = (app) => {
     app.get("/create", auth(), cubeController.get.create);
     app.post("/create", auth(), cubeController.post.create);
     
-    app.get("/login", userController.get.login);
-    app.post("/login", userController.post.login);
+    app.get("/login", auth(false), userController.get.login);
+    app.post("/login", auth(false), userController.post.login);
     
-    app.get("/register", userController.get.register);
-    app.post("/register", userController.post.register);
+    app.get("/register", auth(false), userController.get.register);
+    app.post("/register", auth(false), userController.post.register);
     
-    app.get("/logout", userController.get.logout);
+    app.get("/logout", auth(), userController.get.logout);
     app.get("/about", auth(false), cubeController.get.about);
     app.get("/details/:id", auth(false), cubeController.get.details);
     
@@ -28,5 +28,5 @@ module.exports = (app) => {
     app.post("/edit/:id", auth(), cubeController.post.edit);
 
     app.get("/", auth(false), cubeController.get.index);
-    app.get("*", cubeController.get.error);
+    app.get("*", auth(false), cubeController.get.error);
 };

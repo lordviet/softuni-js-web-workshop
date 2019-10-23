@@ -1,4 +1,4 @@
-const { Accessory, Cube } = require('../models');
+const models = require("../models");
 
 module.exports = {
     get: {
@@ -7,8 +7,8 @@ module.exports = {
         },
         attachAccessory: function (req, res, next) {
             const { id: cubeId } = req.params;
-            Cube.findById(cubeId).then(
-                cube => Promise.all([cube, Accessory.find({ cubes: { $nin: cubeId } })])
+            models.Cube.findById(cubeId).then(
+                cube => Promise.all([cube, models.Accessory.find({ cubes: { $nin: cubeId } })])
             ).then(([cube, filterAccessories]) => {
                 res.render('attachAccessory.hbs', {
                     cube,
@@ -19,7 +19,7 @@ module.exports = {
     },
     post: {
         createAccessory: function (req, res) {
-            Accessory.create(req.body)
+            models.Accessory.create(req.body)
                 .then(() => {
                     return res.redirect("/");
                 });
@@ -28,8 +28,8 @@ module.exports = {
             const { id } = req.params;
             const { accessory: accessoryId } = req.body;
             Promise.all([
-                Cube.update({ _id: id }, { $push: { accessories: accessoryId } }),
-                Accessory.update({ _id: accessoryId }, { $push: { cubes: id } })
+                models.Cube.update({ _id: id }, { $push: { accessories: accessoryId } }),
+                models.Accessory.update({ _id: accessoryId }, { $push: { cubes: id } })
             ])
                 .then(() => {
                     res.redirect('/');

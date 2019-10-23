@@ -1,7 +1,6 @@
-const User = require("../models/User");
-const models = require('../models');
-const utils = require('../utils');
-const appConfig = require('../app-config');
+const models = require("../models");
+const utils = require("../utils");
+const appConfig = require("../app-config");
 
 module.exports = {
     get: {
@@ -43,7 +42,7 @@ module.exports = {
                 });
             }
 
-            User.create({ username, password }).then(() => {
+            models.User.create({ username, password }).then(() => {
                 return res.redirect("/login");
             }).catch(err => {
                 if (err.name === "MongoError" && err.code === 11000) {
@@ -52,7 +51,6 @@ module.exports = {
                             username: "Username already exists!"
                         }
                     });
-                    // return;
                 }
                 next(err);
             });
