@@ -35,7 +35,28 @@ module.exports = {
         });
     },
     getDeleteCube: function (req, res) {
-        return res.render("deleteCubePage"); // add id
+        let id = req.params.id;
+        const { user } = req;
+        const options = {
+            "1": "1 - Very Easy",
+            "2": "2 - Easy",
+            "3": "3 - Medium (Standard 3x3)",
+            "4": "4 - Intermediate",
+            "5": "5 - Expert",
+            "6": "6 - Hardcore"
+        };
+
+        Cube.findOne({ _id: id, creatorId: user.id }).then(cube => {
+            return res.render("deleteCubePage", { cube, user, status: options[cube.difficultyLevel] });
+        });
+    },
+
+    postDeleteCube: function (req, res) {
+        let id = req.params.id;
+        const { user } = req;
+
+        Cube.deleteOne({ _id: id, creatorId: user._id })
+            .then(() => { res.redirect("/"); })
     },
     getEdit: function (req, res) {
         let id = req.params.id;
@@ -60,7 +81,7 @@ module.exports = {
         const { name = null, description = null, imageUrl = null, difficultyLevel = null } = req.body;
         Cube.updateOne({ _id: id }, { name, description, imageUrl, difficultyLevel })
             .then(() => {
-                res.redirect("/");
+                return res.redirect("/");
             });
     },
     getError: function (req, res) {
