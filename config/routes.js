@@ -1,26 +1,32 @@
-const cubeController = require("../controllers/cube-controller");
-const accessoryController = require("../controllers/accessory-controller");
-const userController = require("../controllers/user-controller");
+const {cubeController, accessoryController, userController} = require("../controllers/index");
 const { auth } = require("../utils");
 
 module.exports = (app) => {
-    app.get("/create", auth(), cubeController.getCreate);
-    app.post("/create", auth(), cubeController.postCreate);
-    app.get("/login", userController.getLogin);
-    app.post("/login", userController.postLogin);
-    app.get("/register", userController.getRegister);
-    app.post("/register", userController.postRegister);
-    app.get("/logout", userController.logout);
-    app.get("/about", auth(false), cubeController.getAbout);
-    app.get("/details/:id", auth(false), cubeController.getDetails);
-    app.get("/create/accessory", auth(), accessoryController.getCreateAccessory);
-    app.post("/create/accessory", auth(), accessoryController.postCreateAccessory);
-    app.get("/attach/accessory/:id", accessoryController.getAttachAccessory);
-    app.post("/attach/accessory/:id", accessoryController.postAttachAccessory);
-    app.get("/delete/:id", auth(), cubeController.getDeleteCube);
-    app.post("/delete/:id", auth(), cubeController.postDeleteCube);
-    app.get("/edit/:id", auth(), cubeController.getEdit); 
-    app.post("/edit/:id", auth(), cubeController.postEdit);
-    app.get("/", auth(false), cubeController.getIndex);
-    app.get("*", cubeController.getError);
+    app.get("/create", auth(), cubeController.get.create);
+    app.post("/create", auth(), cubeController.post.create);
+    
+    app.get("/login", userController.get.login);
+    app.post("/login", userController.post.login);
+    
+    app.get("/register", userController.get.register);
+    app.post("/register", userController.post.register);
+    
+    app.get("/logout", userController.get.logout);
+    app.get("/about", auth(false), cubeController.get.about);
+    app.get("/details/:id", auth(false), cubeController.get.details);
+    
+    app.get("/create/accessory", auth(), accessoryController.get.createAccessory);
+    app.post("/create/accessory", auth(), accessoryController.post.createAccessory);
+    
+    app.get("/attach/accessory/:id", accessoryController.get.attachAccessory);
+    app.post("/attach/accessory/:id", accessoryController.post.attachAccessory);
+    
+    app.get("/delete/:id", auth(), cubeController.get.delete);
+    app.post("/delete/:id", auth(), cubeController.post.delete);
+
+    app.get("/edit/:id", auth(), cubeController.get.edit); 
+    app.post("/edit/:id", auth(), cubeController.post.edit);
+
+    app.get("/", auth(false), cubeController.get.index);
+    app.get("*", cubeController.get.error);
 };
